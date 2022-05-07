@@ -1,4 +1,5 @@
 class Test < ApplicationRecord
+  belongs_to :category
   class << self
     def tests_by_category(category)
       Test.order('tests.title asc')
