@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class DataCreate
   def initialize
     @index = nil
@@ -8,25 +6,20 @@ class DataCreate
   def create_users
     3.times do
       User.create([name: Faker::Internet.username(specifier: 5..6),
-                   e_mail: Faker::Internet.free_email,
-                   password: Faker::Internet.password(min_length: 5, max_length: 7)])
+                    e_mail: Faker::Internet.free_email,
+                    password: Faker::Internet.password(min_length: 5, max_length: 7)]
+      )
     end
   end
 
   def create_user_tests
     User.all.each do |user|
-      2.times { UserTest.create user_id: user.id, test_id: Test.all.sample.id }
-    end
-  end
-
-  def create_tests_by_user
-    User.all.each do |user|
-      4.times { Test.find_by(author_id: nil).update(author_id: user.id) }
+      2.times { UserTest.create user_id: user.id, test_id: Test.all.sample.id, started_at: Date.current }
     end
   end
 
   def categories_title
-    %i[GreekPhilosophers ProgrammingLanguage Literature]
+    [:GreekPhilosophers, :ProgrammingLanguage, :Literature]
   end
 
   def create_categories
@@ -70,16 +63,20 @@ class DataCreate
   end
 
   def delete_all
-    [Answer, Question, UserTest, Test, Category, User].each(&:delete_all)
+    [Answer, Question, UserTest, Test, Category, User].each { |klass| klass.delete_all }
   end
 
   def create_all
     delete_all
-    %i[create_categories
-       create_users
-       create_user_tests
-       create_tests_by_user].each { |method| send method }
+    [:create_categories, :create_users, :create_user_tests].each { |method| self.send method }
   end
 end
 
 DataCreate.new.create_all
+
+
+
+
+
+
+
