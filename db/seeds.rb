@@ -21,7 +21,7 @@ class DataCreate
 
   def create_tests_by_user
     User.all.each do |user|
-      3.times { Test.find_by(user_id: nil).update(user_id: user.id) }
+      4.times { Test.find_by(author_id: nil).update(author_id: user.id) }
     end
   end
 
