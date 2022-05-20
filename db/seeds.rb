@@ -3,6 +3,8 @@
 class DataCreate
   def initialize
     @index = nil
+    @users = User.all
+    @tests = Test.all
   end
 
   def create_users
@@ -10,18 +12,6 @@ class DataCreate
       User.create([name: Faker::Internet.username(specifier: 5..6),
                    e_mail: Faker::Internet.free_email,
                    password: Faker::Internet.password(min_length: 5, max_length: 7)])
-    end
-  end
-
-  def create_user_tests
-    User.all.each do |user|
-      2.times { UserTest.create user_id: user.id, test_id: Test.all.sample.id }
-    end
-  end
-
-  def create_tests_by_user
-    User.all.each do |user|
-      4.times { Test.find_by(author_id: nil).update(author_id: user.id) }
     end
   end
 
@@ -43,14 +33,14 @@ class DataCreate
 
   def create_tests(id)
     4.times do
-      test = Test.create title: test_title, category_id: id, level: rand(0..2)
+      test = Test.create(title: test_title, category_id: id, level: rand(0..10), author_id: @users.sample.id)
       create_questions(test.id)
     end
   end
 
   def create_questions(id)
     3.times do
-      question = Question.create body: Faker::Lorem.question, test_id: id
+      question = Question.create(body: Faker::Lorem.question, test_id: id)
       create_answers(question.id)
     end
   end
@@ -69,16 +59,21 @@ class DataCreate
     answers.sample.update(correct: true)
   end
 
+  def create_user_tests
+    @users.each do |user|
+      2.times { UserTest.create(user_id: user.id, test_id: @tests.sample.id) }
+    end
+  end
+
   def delete_all
     [Answer, Question, UserTest, Test, Category, User].each(&:delete_all)
   end
 
   def create_all
     delete_all
-    %i[create_categories
-       create_users
-       create_user_tests
-       create_tests_by_user].each { |method| send method }
+    %i[create_users
+       create_categories
+       create_user_tests].each { |method| send method }
   end
 end
 
