@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class QuestionsController < ApplicationController
-  before_action :find_test, only: %i[index show]
+  before_action :find_test, only: %i[new create index]
   before_action :find_question, only: %i[show destroy]
 
   rescue_from ActiveRecord::RecordNotFound, with: :object_not_found
@@ -17,8 +17,8 @@ class QuestionsController < ApplicationController
   def new; end
 
   def create
-    @question = Question.new(question_params)
-    if @question.save!
+    @question = @test.questions.new(question_params)
+    if @question.save
       redirect_to test_questions_path
     else
       render plain: 'Question was not created! Check your data!'
@@ -32,20 +32,18 @@ class QuestionsController < ApplicationController
   private
 
   def find_test
-    @current_search = 'Test'
     @test = Test.find(params[:test_id])
   end
 
   def find_question
-    @current_search = 'Question'
     @question = Question.find(params[:id])
   end
 
   def object_not_found
-    render plain: "#{@current_search} not found!"
+    render plain: 'Object not found!'
   end
 
   def question_params
-    params.permit(:body, :test_id)
+    params.permit(:body)
   end
 end
