@@ -1,0 +1,9 @@
+<h1>Creating a new question.</h1>
+
+<%= form_with model: @question,url: "/tests/#{@test.id}/questions" do |form| %>
+  <div>
+    <%= form.label :question%>
+    <%= form.text_field :body, minlength: 10, required: true, placeholder: 'question' %>
+  </div>
+  <%= form.submit 'Submit!'%>
+<% end %>
