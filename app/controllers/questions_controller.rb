@@ -1,32 +1,43 @@
 # frozen_string_literal: true
 
 class QuestionsController < ApplicationController
-  before_action :find_test, only: %i[new create index]
-  before_action :find_question, only: %i[show destroy]
+  before_action :find_test, only: %i[new index create]
+  before_action :find_question, only: %i[show destroy edit update]
 
   rescue_from ActiveRecord::RecordNotFound, with: :object_not_found
 
   def index
-    render plain: @test.questions.pluck(:body)
+    redirect_to test_questions_path
   end
 
-  def show
-    render plain: @question.body
-  end
+  def show; end
 
-  def new; end
+  def new
+    @question = @test.questions.new
+  end
 
   def create
     @question = @test.questions.new(question_params)
     if @question.save
-      redirect_to test_questions_path
+      redirect_to @test
     else
-      render plain: 'Question was not created! Check your data!'
+      render inline: '<strong>The question is not was created!</strong>'
     end
   end
 
+  def update
+    if @question.update(question_params)
+      redirect_to @question.test
+    else
+      render :edit
+    end
+  end
+
+  def edit; end
+
   def destroy
     @question.destroy
+    render plain: 'Question was deleted!'
   end
 
   private
@@ -44,6 +55,6 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.permit(:body)
+    params.require(:question).permit(:body)
   end
 end

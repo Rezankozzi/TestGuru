@@ -5,4 +5,5 @@ class Question < ApplicationRecord
   has_many :answers
 
   validates :body, presence: true, length: { minimum: 10 }
+  validates_uniqueness_of :body, message: 'The question already exists!'
 end

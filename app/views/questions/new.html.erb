@@ -1,9 +1,5 @@
-<h1>Creating a new question.</h1>
+<h1><%= question_header(@question) %></h1>
+<%= render 'form' %>
+<%= link_to 'Back', tests_path(@question.test_id) %>
 
-<%= form_with model: @question,url: "/tests/#{@test.id}/questions" do |form| %>
-  <div>
-    <%= form.label :question%>
-    <%= form.text_field :body, minlength: 10, required: true, placeholder: 'question' %>
-  </div>
-  <%= form.submit 'Submit!'%>
-<% end %>
+
