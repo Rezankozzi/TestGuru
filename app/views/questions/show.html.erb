@@ -1,0 +1,8 @@
+<p>
+  <strong> Question title: </strong>
+  <tr><%= @question.body %></tr>
+</p>
+
+<tr><%= link_to 'Back', test_path(@question.test_id) %></tr>
+<tr><%= link_to 'New answer'%></tr>
+<%= render 'answers/answers'%>

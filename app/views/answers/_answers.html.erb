@@ -1,0 +1,13 @@
+<table>
+  <tr>
+    <th>Answers</th>
+    <th colspan='2'>Actions</th>
+  </tr>
+  <% @question.answers.each do |answer| %>
+    <tr>
+      <td><%= link_to answer.body %></td>
+      <td><%= link_to 'Edit' %></td>
+      <td><%= link_to 'Delete'%></td>
+    </tr>
+  <%end %>
+</table>

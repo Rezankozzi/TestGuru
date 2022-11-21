@@ -1,0 +1,14 @@
+<p>
+  <strong>Title:</strong>
+  <%= @test.title %>
+</p>
+
+<p>
+  <strong>Level:</strong>
+  <%= test_level(@test.level)%>
+</p>
+<td><%= link_to 'Back', tests_path%></td>
+<td><%= link_to 'New question', new_test_question_path(@test)%></td>
+<%= render 'questions/questions'%>
+
+
